@@ -1,10 +1,17 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 
 function App() {
   const [password, setPassword] = useState("")
   const [length, setLength] = useState(8)
   const [numAllowed, setNumAllowed] = useState(false)
   const [charAllowed, setCharAllowed] = useState(false)
+
+  const passwordRef = useRef(null)
+
+  const copyPass = useCallback(() => {
+    passwordRef.current?.select()
+    window.navigator.clipboard.writeText(password);
+  }, [password])
 
   const generatePassword = useCallback(
     () => {
@@ -36,9 +43,10 @@ function App() {
             value={password}
             placeholder='password'
             readOnly
+            ref={passwordRef}
           />
         </div>
-        <button>Copy</button>
+        <button onClick={copyPass}>Copy</button>
         <button onClick={generatePassword}>Generate Password</button>
       </div>
       <div>
@@ -46,7 +54,7 @@ function App() {
           <input 
             type="range" 
             min={6}
-            max={100}
+            max={32}
             value={length}
             onChange={(e)=> {setLength(e.target.value)}}
           />
